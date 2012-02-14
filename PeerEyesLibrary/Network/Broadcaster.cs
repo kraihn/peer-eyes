@@ -25,7 +25,7 @@ using System.Net;
 
 namespace PeerEyesLibrary.Network
 {
-    class Broadcaster
+    public class Broadcaster
     {
         private Thread signal;
         private static readonly IPAddress address = IPAddress.Parse("224.129.100.3");
@@ -56,25 +56,27 @@ namespace PeerEyesLibrary.Network
         {
             bool done = false;
 
-            UdpClient listener = new UdpClient();
+            UdpClient sender = new UdpClient();
             IPEndPoint groupEP = new IPEndPoint(address, port);
+            Random rand = new Random();
+            string message = Environment.MachineName + " is alive!";
 
             try
             {
-                listener.JoinMulticastGroup(address);
-                listener.Connect(groupEP);
+                sender.JoinMulticastGroup(address);
+                sender.Connect(groupEP);
 
                 while (!done)
                 {
-                    Console.WriteLine("Waiting for broadcast");
-                    byte[] bytes = listener.Receive(ref groupEP);
+                    Console.WriteLine("Sending datagram : {0}", message);
+                    byte[] bytes = Encoding.ASCII.GetBytes(message);
 
-                    Console.WriteLine("Received broadcast from {0} :\n {1}\n",
-                        groupEP.ToString(),
-                        Encoding.ASCII.GetString(bytes, 0, bytes.Length));
+                    sender.Send(bytes, bytes.Length);
+
+                    Thread.Sleep(1000 + (rand.Next() % 1000));
                 }
 
-                listener.Close();
+                sender.Close();
 
             }
             catch (Exception e)
