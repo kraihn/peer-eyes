@@ -14,18 +14,27 @@ namespace PeerEyesLibrary.Network
 
         public Tracker()
         {
-            watch = new Thread(new ThreadStart(RunTracker));
             StartTracking();
         }
 
         public void StartTracking()
         {
-            watch.Start();
+            if (watch == null || !watch.IsAlive)
+            {
+                watch = new Thread(new ThreadStart(RunTracker));
+                watch.Start();
+            }
         }
 
         public void StopTracking()
         {
             watch.Abort();
+        }
+
+        public void RestartTracking()
+        {
+            StopTracking();
+            StartTracking();
         }
 
         private void RunTracker()

@@ -31,18 +31,27 @@ namespace PeerEyesLibrary.Network
 
         public Broadcaster()
         {
-            signal = new Thread(new ThreadStart(RunBroadcaster));
             StartBroadcasting();
         }
 
         public void StartBroadcasting()
         {
-            signal.Start();
+            if (signal == null || !signal.IsAlive)
+            {
+                signal = new Thread(new ThreadStart(RunBroadcaster));
+                signal.Start();
+            }
         }
 
         public void StopBroadcasting()
         {
             signal.Abort();
+        }
+
+        public void RestartBroadcasting()
+        {
+            StopBroadcasting();
+            StartBroadcasting();
         }
 
         public void GoOffline()
