@@ -46,7 +46,7 @@ namespace PeerEyesLibrary.Network
 
         public override string ToString()
         {
-            return this.HostName;
+            return this.HostName + ": " + LastSeen.ToString();
         }
     }
 }

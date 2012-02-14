@@ -49,6 +49,7 @@ namespace PeerEyesLibrary.Network
         public void StopTracking()
         {
             watch.Abort();
+            peers.Clear();
         }
 
         public void RestartTracking()
