@@ -25,7 +25,8 @@ namespace PeerEyesLibrary.Network
 {
     public static class Info
     {
-        public static readonly IPAddress address = IPAddress.Parse("224.129.100.3");
+        public static readonly IPAddress sendAddress = IPAddress.Broadcast;
+        public static readonly IPAddress recvAddress = IPAddress.Any;
         public const int port = 11000;
     }
 }

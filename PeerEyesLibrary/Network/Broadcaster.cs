@@ -52,34 +52,16 @@ namespace PeerEyesLibrary.Network
 
         private void RunBroadcaster()
         {
-            bool done = false;
+            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            sock.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+            IPEndPoint iep = new IPEndPoint(Info.sendAddress, Info.port);
 
-            UdpClient sender = new UdpClient();
-            IPEndPoint groupEP = new IPEndPoint(Info.address, Info.port);
-            Random rand = new Random();
-            string message = Environment.MachineName + " is alive!";
-
-            try
+            string hostname = Dns.GetHostName();
+            byte[] data = Encoding.ASCII.GetBytes(hostname);
+            while (true)
             {
-                sender.JoinMulticastGroup(Info.address);
-                sender.Connect(groupEP);
-
-                while (!done)
-                {
-                    Console.WriteLine("Sending datagram : {0}", message);
-                    byte[] bytes = Encoding.ASCII.GetBytes(message);
-
-                    sender.Send(bytes, bytes.Length);
-
-                    Thread.Sleep(1000 + (rand.Next() % 1000));
-                }
-
-                sender.Close();
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
+                sock.SendTo(data, iep);
+                Thread.Sleep(3000);
             }
         }
     }
