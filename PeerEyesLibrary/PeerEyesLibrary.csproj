@@ -46,6 +46,7 @@
     <Compile Include="Network\Broadcaster.cs" />
     <Compile Include="Network\Info.cs" />
     <Compile Include="Network\Peer.cs" />
+    <Compile Include="Network\Screencaster.cs" />
     <Compile Include="Network\Tracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

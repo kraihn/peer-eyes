@@ -22,7 +22,7 @@ using System.Text;
 
 namespace PeerEyesLibrary.Network
 {
-    class Screencaster
+    public class Screencaster
     {
     }
 }
