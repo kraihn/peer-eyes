@@ -69,8 +69,15 @@ namespace PeerEyesLibrary.Network
             byte[] data = Encoding.ASCII.GetBytes(hostname);
             while (true)
             {
-                sock.SendTo(data, iep);
-                Thread.Sleep(3000);
+                try
+                {
+                    sock.SendTo(data, iep);
+                    Thread.Sleep(3000);
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
         }
     }

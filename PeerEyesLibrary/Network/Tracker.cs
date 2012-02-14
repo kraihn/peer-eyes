@@ -62,28 +62,35 @@ namespace PeerEyesLibrary.Network
         {
             while (true)
             {
-                Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                IPEndPoint iep = new IPEndPoint(Info.recvAddress, Info.port);
-                sock.Bind(iep);
-                EndPoint ep = (EndPoint)iep;
-                Console.WriteLine("Ready to receive...");
-
-                byte[] data = new byte[1024];
-                int recv = sock.ReceiveFrom(data, ref ep);
-                string stringData = Encoding.ASCII.GetString(data, 0, recv);
-                Console.WriteLine("received: {0}  from: {1}", stringData, ep.ToString());
-
-                string host = stringData.Split(' ')[0];
-                if (peers.Keys.Contains(host))
+                try
                 {
-                    peers[host].Spotted();
-                }
-                else
-                {
-                    peers.TryAdd(host, new Peer(host));
-                }
+                    Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                    IPEndPoint iep = new IPEndPoint(Info.recvAddress, Info.port);
+                    sock.Bind(iep);
+                    EndPoint ep = (EndPoint)iep;
+                    Console.WriteLine("Ready to receive...");
 
-                sock.Close();
+                    byte[] data = new byte[1024];
+                    int recv = sock.ReceiveFrom(data, ref ep);
+                    string stringData = Encoding.ASCII.GetString(data, 0, recv);
+                    Console.WriteLine("received: {0}  from: {1}", stringData, ep.ToString());
+
+                    sock.Close();
+
+                    string host = stringData.Split(' ')[0];
+                    if (peers.Keys.Contains(host))
+                    {
+                        peers[host].Spotted();
+                    }
+                    else
+                    {
+                        peers.TryAdd(host, new Peer(host));
+                    }
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
         }
     }
