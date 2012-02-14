@@ -28,8 +28,6 @@ namespace PeerEyesLibrary.Network
     public class Broadcaster
     {
         private Thread signal;
-        private static readonly IPAddress address = IPAddress.Parse("224.129.100.3");
-        private const int port = 11000;
 
         public Broadcaster()
         {
@@ -57,13 +55,13 @@ namespace PeerEyesLibrary.Network
             bool done = false;
 
             UdpClient sender = new UdpClient();
-            IPEndPoint groupEP = new IPEndPoint(address, port);
+            IPEndPoint groupEP = new IPEndPoint(Info.address, Info.port);
             Random rand = new Random();
             string message = Environment.MachineName + " is alive!";
 
             try
             {
-                sender.JoinMulticastGroup(address);
+                sender.JoinMulticastGroup(Info.address);
                 sender.Connect(groupEP);
 
                 while (!done)
