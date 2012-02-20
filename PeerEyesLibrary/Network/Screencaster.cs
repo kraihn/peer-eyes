@@ -19,10 +19,68 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Net.Sockets;
+using System.Net;
+using PeerEyesLibrary.Images;
 
 namespace PeerEyesLibrary.Network
 {
     public class Screencaster
     {
+        private Thread screen;
+
+        public Screencaster()
+        {
+            StartScreencasting();
+        }
+
+        public void StartScreencasting()
+        {
+            if (screen == null || !screen.IsAlive)
+            {
+                screen = new Thread(new ThreadStart(RunScreencaster));
+                screen.Start();
+            }
+        }
+
+        public void StopScreencasting()
+        {
+            screen.Abort();
+        }
+
+        public void RestartScreencasting()
+        {
+            StopScreencasting();
+            StartScreencasting();
+        }
+
+        public void RunScreencaster()
+        {
+            while (true)
+            {
+                try
+                {
+                    UdpClient send = new UdpClient();
+                    send.Connect("127.0.0.1", Info.screencastPort);
+
+                    byte[] imgData = Screenshot.GetScreenshot();
+
+
+                    Console.WriteLine("Sending img...");
+                    send.Send(imgData, imgData.Length);
+                    Console.WriteLine("Sent img");
+
+                    send.Close();
+
+                    Thread.Sleep(1000);
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine(e);
+                    Thread.Sleep(1000);
+                }
+            }
+        }
     }
 }
