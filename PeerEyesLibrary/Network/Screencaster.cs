@@ -62,7 +62,7 @@ namespace PeerEyesLibrary.Network
                 try
                 {
                     UdpClient send = new UdpClient();
-                    send.Connect("127.0.0.1", Info.screencastPort);
+                    send.Connect(Info.sendAddress, Info.screencastPort);
 
                     byte[] imgData = Screenshot.GetScreenshot();
 
