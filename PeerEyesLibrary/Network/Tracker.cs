@@ -78,13 +78,14 @@ namespace PeerEyesLibrary.Network
                     sock.Close();
 
                     string host = stringData.Split(' ')[0];
+                    string ip = ep.ToString().Split(':')[0];
                     if (peers.Keys.Contains(host))
                     {
                         peers[host].Spotted();
                     }
                     else
                     {
-                        peers.TryAdd(host, new Peer(host));
+                        peers.TryAdd(host, new Peer(host, ip));
                     }
                 }
                 catch (SocketException e)

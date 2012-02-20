@@ -19,29 +19,43 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net;
 
 namespace PeerEyesLibrary.Network
 {
     public class Peer
     {
         public string HostName;
+        public IPAddress IpAddress;
         public DateTime LastSeen;
 
-        public Peer(string host)
+        public Peer(string host, string ip)
         {
             this.HostName = host;
+            this.IpAddress = IPAddress.Parse(ip);
             this.LastSeen = DateTime.Now;
         }
 
-        public Peer(string host, DateTime time)
+        public Peer(string host, string ip, DateTime time)
         {
             this.HostName = host;
+            this.IpAddress = IPAddress.Parse(ip);
             this.LastSeen = time;
         }
 
         public void Spotted()
         {
             this.LastSeen = DateTime.Now;
+        }
+
+        public bool IsExpired()
+        {
+            DateTime t = DateTime.Now;
+            TimeSpan s = t.Subtract(LastSeen);
+            if (s.TotalMinutes >= 5)
+                return true;
+            else
+                return false;
         }
 
         public override string ToString()
