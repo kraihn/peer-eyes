@@ -61,9 +61,11 @@ namespace PeerEyesLibrary.Network
 
         private void RunBroadcaster()
         {
-            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            sock.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
-            IPEndPoint iep = new IPEndPoint(Info.sendAddress, Info.port);
+            //Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            //sock.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+            UdpClient udp = new UdpClient();
+            Console.WriteLine("Enable Broadcast? " + udp.EnableBroadcast);
+            IPEndPoint iep = new IPEndPoint(Info.sendAddress, Info.broadcastPort);
 
             string hostname = Dns.GetHostName();
             byte[] data = Encoding.ASCII.GetBytes(hostname);
@@ -71,7 +73,8 @@ namespace PeerEyesLibrary.Network
             {
                 try
                 {
-                    sock.SendTo(data, iep);
+                    //sock.SendTo(data, iep);
+                    udp.Send(data, data.Length, iep);
                     Thread.Sleep(3000);
                 }
                 catch (SocketException e)
