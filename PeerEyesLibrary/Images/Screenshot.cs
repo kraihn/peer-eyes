@@ -65,6 +65,7 @@ namespace PeerEyesLibrary.Images
             parameters.Param[0] = parm;
 
             Bitmap bitmap = TakeScreenshot();
+            bitmap = Resize(bitmap);
             try
             {
                 //string name = "";
@@ -91,6 +92,21 @@ namespace PeerEyesLibrary.Images
                 }
             }
             return null;
+        }
+
+        public static Bitmap Resize(Bitmap bitmap, double scale = -0.50)
+        {
+            Bitmap result = new Bitmap((int)(bitmap.Width + bitmap.Width * scale), (int)(bitmap.Height + bitmap.Height * scale));
+
+            using (Graphics graphics = Graphics.FromImage(result))
+            {
+                graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                graphics.DrawImage(bitmap, 0, 0, result.Width, result.Height);
+            }
+
+            return result;
         }
     }
 }
