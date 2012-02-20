@@ -65,7 +65,7 @@ namespace PeerEyesLibrary.Network
                 try
                 {
                     Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                    IPEndPoint iep = new IPEndPoint(Info.recvAddress, Info.port);
+                    IPEndPoint iep = new IPEndPoint(Info.recvAddress, Info.broadcastPort);
                     sock.Bind(iep);
                     EndPoint ep = (EndPoint)iep;
                     Console.WriteLine("Ready to receive...");
