@@ -27,6 +27,7 @@ namespace PeerEyesLibrary.Network
     {
         public static readonly IPAddress sendAddress = IPAddress.Broadcast;
         public static readonly IPAddress recvAddress = IPAddress.Any;
-        public const int port = 11000;
+        public const int broadcastPort = 11000;
+        public const int screencastPort = 12000;
     }
 }
