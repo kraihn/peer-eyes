@@ -85,7 +85,7 @@ namespace PeerEyesTray
 
         private void tmiExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Environment.Exit(0);
         }
     }
 }
