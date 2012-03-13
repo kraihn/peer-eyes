@@ -16,22 +16,27 @@
  */
 
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Net.Sockets;
 using System.Net;
 using PeerEyesLibrary.Images;
+using PeerEyesLibrary.Crypt;
 
 namespace PeerEyesLibrary.Network
 {
     public class Screencaster
     {
         private Thread screen;
+        private int screenPort;
+        private ArrayList viewers;
 
-        public Screencaster()
+        public Screencaster(int port)
         {
+            viewers = new ArrayList();
+            screenPort = port;
             StartScreencasting();
         }
 
@@ -62,18 +67,17 @@ namespace PeerEyesLibrary.Network
                 try
                 {
                     UdpClient send = new UdpClient();
-                    send.Connect(Info.sendAddress, Info.screencastPort);
+                    send.Connect(Info.sendAddress, screenPort);
 
                     byte[] imgData = Screenshot.GetScreenshot();
-
-
+                    imgData = BasicAes.EncryptBytes(imgData);
                     Console.WriteLine("Sending img...");
                     send.Send(imgData, imgData.Length);
                     Console.WriteLine("Sent img");
 
                     send.Close();
 
-                    Thread.Sleep(1000);
+                    Thread.Sleep(100);
                 }
                 catch (SocketException e)
                 {

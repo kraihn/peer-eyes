@@ -31,9 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainTrayForm));
             this.cmsTray = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.nicTray = new System.Windows.Forms.NotifyIcon(this.components);
-            this.tmiExit = new System.Windows.Forms.ToolStripMenuItem();
             this.tmiPeers = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmiExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.nicTray = new System.Windows.Forms.NotifyIcon(this.components);
             this.cmsTray.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -43,7 +43,20 @@
             this.tmiPeers,
             this.tmiExit});
             this.cmsTray.Name = "cmsTray";
-            this.cmsTray.Size = new System.Drawing.Size(103, 48);
+            this.cmsTray.Size = new System.Drawing.Size(153, 70);
+            // 
+            // tmiPeers
+            // 
+            this.tmiPeers.Name = "tmiPeers";
+            this.tmiPeers.Size = new System.Drawing.Size(152, 22);
+            this.tmiPeers.Text = "Peers";
+            // 
+            // tmiExit
+            // 
+            this.tmiExit.Name = "tmiExit";
+            this.tmiExit.Size = new System.Drawing.Size(152, 22);
+            this.tmiExit.Text = "Exit";
+            this.tmiExit.Click += new System.EventHandler(this.tmiExit_Click);
             // 
             // nicTray
             // 
@@ -52,18 +65,6 @@
             this.nicTray.Text = "Peer Eyes";
             this.nicTray.Visible = true;
             this.nicTray.MouseClick += new System.Windows.Forms.MouseEventHandler(this.nicTray_MouseClick);
-            // 
-            // tmiExit
-            // 
-            this.tmiExit.Name = "tmiExit";
-            this.tmiExit.Size = new System.Drawing.Size(102, 22);
-            this.tmiExit.Text = "Exit";
-            // 
-            // tmiPeers
-            // 
-            this.tmiPeers.Name = "tmiPeers";
-            this.tmiPeers.Size = new System.Drawing.Size(102, 22);
-            this.tmiPeers.Text = "Peers";
             // 
             // MainTrayForm
             // 

@@ -25,21 +25,27 @@ using System.Net;
 using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
+using PeerEyesLibrary.Crypt;
 
 namespace PeerEyesLibrary.Network
 {
     public class Viewer
     {
+        private IPAddress ipAddress;
+        private int screenPort;
         private Thread view;
         public Queue<Image> screenshots;
 
-        public Viewer()
+        public Viewer(IPAddress hostAddress, int port)
         {
+            this.ipAddress = hostAddress;
+            this.screenPort = port;
             screenshots = new Queue<Image>();
             StartViewing();
         }
 
-        public void StartViewing(){
+        public void StartViewing()
+        {
             if (view == null || !view.IsAlive)
             {
                 view = new Thread(new ThreadStart(RunViewer));
@@ -60,21 +66,20 @@ namespace PeerEyesLibrary.Network
 
         public void RunViewer()
         {
-            //ViewForm form = new ViewForm();
-            //form.Show();
             while (true)
             {
                 try
                 {
-                    UdpClient recv = new UdpClient(Info.screencastPort);
-                    IPEndPoint remote = new IPEndPoint(IPAddress.Any, Info.screencastPort);
+                    UdpClient recv = new UdpClient(this.screenPort);
+                    IPEndPoint remote = new IPEndPoint(IPAddress.Any, this.screenPort);
 
                     Console.WriteLine("Receiving img...");
                     byte[] imgData = recv.Receive(ref remote);
+                    imgData = BasicAes.DecryptBytes(imgData);
                     Console.WriteLine("Received img");
 
                     recv.Close();
-                    
+
                     MemoryStream ms = new MemoryStream(imgData);
                     Image img = Image.FromStream(ms);
                     //DateTime t = DateTime.Now;
@@ -82,7 +87,7 @@ namespace PeerEyesLibrary.Network
                     //form.BackgroundImage = img;
                     //form.Update();
                     screenshots.Enqueue(img);
-                    
+
                 }
                 catch (SocketException e)
                 {

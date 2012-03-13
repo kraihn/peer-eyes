@@ -24,6 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using PeerEyesLibrary.Network;
+using System.Threading;
 
 namespace PeerEyesTray
 {
@@ -31,12 +32,28 @@ namespace PeerEyesTray
     {
         private Broadcaster broadcast;
         private Tracker tracks;
+        private Screencaster screen;
+        private int screenPort;
 
         public MainTrayForm()
         {
             InitializeComponent();
-            broadcast = new Broadcaster();
+
+            // Start listening for peers
             tracks = new Tracker();
+
+            // Wait for peer list to be generated
+            Thread.Sleep(4000);
+
+            // Pick a random port to screencast and check against
+            // available local ports and other peers screencast ports
+            // as to not duplicate and cause collisions. In the meantime
+            // random offset will suffice.
+            Random rand = new Random((int)DateTime.Now.ToFileTimeUtc());
+            screenPort = Info.screencastPort + (rand.Next() % 1000);
+
+            broadcast = new Broadcaster(screenPort);
+            screen = new Screencaster(screenPort);
         }
 
         private void RefreshPeers()
@@ -46,13 +63,26 @@ namespace PeerEyesTray
             {
                 ToolStripMenuItem tmi = new ToolStripMenuItem();
                 tmi.Text = host;
+                tmi.Click += new EventHandler(tmi_Click);
                 tmiPeers.DropDownItems.Add(tmi);
             }
+        }
+
+        void tmi_Click(object sender, EventArgs e)
+        {
+            string host = ((ToolStripMenuItem)sender).Text;
+            ViewerForm frm = new ViewerForm(host, tracks.peers[host].IpAddress, tracks.peers[host].ScreenPort);
+            frm.Show();
         }
 
         private void nicTray_MouseClick(object sender, MouseEventArgs e)
         {
             RefreshPeers();
+        }
+
+        private void tmiExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

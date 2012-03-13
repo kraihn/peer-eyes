@@ -27,19 +27,22 @@ namespace PeerEyesLibrary.Network
     {
         public string HostName;
         public IPAddress IpAddress;
+        public int ScreenPort;
         public DateTime LastSeen;
 
-        public Peer(string host, string ip)
+        public Peer(string host, string ip, int port)
         {
             this.HostName = host;
             this.IpAddress = IPAddress.Parse(ip);
+            this.ScreenPort = port;
             this.LastSeen = DateTime.Now;
         }
 
-        public Peer(string host, string ip, DateTime time)
+        public Peer(string host, string ip, int port, DateTime time)
         {
             this.HostName = host;
             this.IpAddress = IPAddress.Parse(ip);
+            this.ScreenPort = port;
             this.LastSeen = time;
         }
 

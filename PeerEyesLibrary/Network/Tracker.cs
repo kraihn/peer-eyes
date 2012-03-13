@@ -23,6 +23,7 @@ using System.Text;
 using System.Threading;
 using System.Net.Sockets;
 using System.Net;
+using PeerEyesLibrary.Crypt;
 
 namespace PeerEyesLibrary.Network
 {
@@ -72,6 +73,7 @@ namespace PeerEyesLibrary.Network
 
                     byte[] data = new byte[1024];
                     int recv = sock.ReceiveFrom(data, ref ep);
+                    data = BasicAes.DecryptBytes(data);
                     string stringData = Encoding.ASCII.GetString(data, 0, recv);
                     Console.WriteLine("received: {0}  from: {1}", stringData, ep.ToString());
 
@@ -79,13 +81,15 @@ namespace PeerEyesLibrary.Network
 
                     string host = stringData.Split(' ')[0];
                     string ip = ep.ToString().Split(':')[0];
+                    int port = Int32.Parse(stringData.Split(' ')[1].Split(':')[1]);
+
                     if (peers.Keys.Contains(host))
                     {
                         peers[host].Spotted();
                     }
                     else
                     {
-                        peers.TryAdd(host, new Peer(host, ip));
+                        peers.TryAdd(host, new Peer(host, ip, port));
                     }
                 }
                 catch (SocketException e)

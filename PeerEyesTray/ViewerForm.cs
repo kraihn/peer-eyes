@@ -23,15 +23,35 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using PeerEyesLibrary.Network;
+using System.Net;
 
 namespace PeerEyesTray
 {
     public partial class ViewerForm : Form
     {
-        public ViewerForm(string hostname, string ipAddress)
+        private Viewer view;
+
+        public ViewerForm(string hostname, IPAddress ip, int port)
         {
             InitializeComponent();
             this.Text = hostname;
+
+            view = new Viewer(ip, port);
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            if (view.screenshots.Count > 0)
+            {
+                this.pictureBox.Image = view.screenshots.Dequeue();
+                this.Update();
+            }
+        }
+
+        private void ViewerForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            view.StopViewing();
         }
     }
 }

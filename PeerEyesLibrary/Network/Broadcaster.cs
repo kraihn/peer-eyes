@@ -22,15 +22,18 @@ using System.Text;
 using System.Threading;
 using System.Net.Sockets;
 using System.Net;
+using PeerEyesLibrary.Crypt;
 
 namespace PeerEyesLibrary.Network
 {
     public class Broadcaster
     {
         private Thread signal;
+        private int screenPort;
 
-        public Broadcaster()
+        public Broadcaster(int port)
         {
+            screenPort = port;
             StartBroadcasting();
         }
 
@@ -61,19 +64,16 @@ namespace PeerEyesLibrary.Network
 
         private void RunBroadcaster()
         {
-            //Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            //sock.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
             UdpClient udp = new UdpClient();
-            Console.WriteLine("Enable Broadcast? " + udp.EnableBroadcast);
             IPEndPoint iep = new IPEndPoint(Info.sendAddress, Info.broadcastPort);
 
             string hostname = Dns.GetHostName();
-            byte[] data = Encoding.ASCII.GetBytes(hostname);
+            byte[] data = Encoding.ASCII.GetBytes(hostname + " SCREEN:" + screenPort);
+            data = BasicAes.EncryptBytes(data);
             while (true)
             {
                 try
                 {
-                    //sock.SendTo(data, iep);
                     udp.Send(data, data.Length, iep);
                     Thread.Sleep(3000);
                 }
