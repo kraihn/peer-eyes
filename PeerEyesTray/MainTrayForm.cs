@@ -61,10 +61,13 @@ namespace PeerEyesTray
             tmiPeers.DropDownItems.Clear();
             foreach (string host in tracks.peers.Keys)
             {
-                ToolStripMenuItem tmi = new ToolStripMenuItem();
-                tmi.Text = host;
-                tmi.Click += new EventHandler(tmi_Click);
-                tmiPeers.DropDownItems.Add(tmi);
+                if (!tracks.peers[host].IsExpired())
+                {
+                    ToolStripMenuItem tmi = new ToolStripMenuItem();
+                    tmi.Text = host;
+                    tmi.Click += new EventHandler(tmi_Click);
+                    tmiPeers.DropDownItems.Add(tmi);
+                }
             }
         }
 

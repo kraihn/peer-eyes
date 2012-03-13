@@ -55,7 +55,7 @@ namespace PeerEyesLibrary.Network
         {
             DateTime t = DateTime.Now;
             TimeSpan s = t.Subtract(LastSeen);
-            if (s.TotalMinutes >= 5)
+            if (s.TotalMinutes >= 2)
                 return true;
             else
                 return false;
