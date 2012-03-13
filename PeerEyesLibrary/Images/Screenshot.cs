@@ -115,13 +115,13 @@ namespace PeerEyesLibrary.Images
 
             if (bitmap.Width > bitmap.Height)
             {
-                double ratio = bitmap.Width / bitmap.Height;
+                double ratio = (double)bitmap.Width / (double)bitmap.Height;
                 finalWidth = width;
                 finalHeight = (int)(width / ratio);
             }
             else
             {
-                double ratio = bitmap.Height / bitmap.Width;
+                double ratio = (double)bitmap.Height / (double)bitmap.Width;
                 finalHeight = height;
                 finalWidth = (int)(height / ratio);
             }
